@@ -33,6 +33,8 @@ def main():
     @app_commands.default_permissions(manage_guild=True)
     async def initiate(interaction: discord.Interaction, name: str, url: str):
 
+        await interaction.response.defer(ephemeral=True)
+
         if sProc.check_edit_access(url) != "writer":
             response = "Отсутствуют права редактора по ссылке, опрос не был добавлен"
             message = fProc.format_notification(response)
@@ -42,7 +44,7 @@ def main():
             response = jProc.initiate_survey(name, url, current_date, json_path)
             message = fProc.format_notification(response)
 
-        await interaction.response.send_message(message, ephemeral=True)
+        await interaction.followup.send(message, ephemeral=True)
 
     @bot.tree.command(description="Добавить опрос из общего списка в архив")
     @app_commands.describe(name="Название опроса, который будет архивирован")
